@@ -1,3 +1,8 @@
+// Lien Google Maps en mode ITINÉRAIRE (ouvre directement la navigation vers la
+// destination, sans liste de résultats). Destination encodée proprement.
+const buildGoogleMapsDirectionsUrl = (destination: string) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+
 export const invitationConfig = {
   babyName: "Ezio",
   birthDate: "17 mai 2026",
@@ -8,10 +13,16 @@ export const invitationConfig = {
   baptismIsoDate: "2026-07-12",
   ceremonyTime: "12h",
   ceremonyEndTime: "",
-  ceremonyLocation: "Église / lieu de baptême",
-  ceremonyAddress: "32 rue des salines, La Saline les Bains",
-  ceremonyMapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=32%20rue%20des%20salines%2C%20La%20Saline%20les%20Bains",
+  // Lieu de la cérémonie (église) — affichage + itinéraire précis
+  ceremonyLocation: "Église Notre-Dame de la Salette, Saint-Leu",
+  ceremonyMapsUrl: buildGoogleMapsDirectionsUrl(
+    "Église Notre-Dame de la Salette, 4 rue Notre Dame de la Salette, 97436 Saint-Leu, La Réunion",
+  ),
+  // Adresse de réception / célébration — affichage + itinéraire par coordonnées
+  // GPS exactes (le texte seul renvoyait vers un mauvais lieu).
+  receptionAddress: "5 chemin Coupan, 97424 Piton Saint-Leu",
+  receptionMapsUrl:
+    "https://www.google.com/maps/dir/?api=1&destination=-21.2093269,55.297468&travelmode=driving",
   celebrationLocation: "Repas festif après la cérémonie",
   celebrationNote: "Rires, souvenirs et surprises au programme.",
   dressCode: "Tenue dans les tons jungle : vert, beige, marron ou naturel",

@@ -1,4 +1,4 @@
-import { CalendarDays, CheckCircle2, Clock, MapPin, PartyPopper, Shirt, Sparkles } from "lucide-react";
+import { CalendarDays, Clock, MapPin, PartyPopper, Shirt, Sparkles } from "lucide-react";
 import { invitationConfig } from "../config/invitationConfig";
 import { isPlaceholderValue } from "../utils/whatsapp";
 import { Countdown } from "./Countdown";
@@ -21,12 +21,14 @@ const planItems = [
     icon: Sparkles,
     label: "Lieu de la cérémonie",
     value: invitationConfig.ceremonyLocation,
+    href: invitationConfig.ceremonyMapsUrl,
+    hint: "Voir l'itinéraire",
   },
   {
     icon: MapPin,
     label: "Adresse",
-    value: invitationConfig.ceremonyAddress,
-    href: invitationConfig.ceremonyMapsUrl,
+    value: invitationConfig.receptionAddress,
+    href: invitationConfig.receptionMapsUrl,
     hint: "Voir l'itinéraire",
   },
   {
@@ -48,7 +50,10 @@ export const ExpeditionPlan = () => (
     <Particles count={30} seed={3} />
     <FloatingButterflies section="plan" />
     <SectionHeader eyebrow="Plan d'expédition" title="Rendez-vous pour une belle expédition">
-      <p>Les repères essentiels seront mis à jour depuis le fichier de configuration.</p>
+      <p>
+        Retrouvez ici les informations essentielles pour nous accompagner lors de cette belle journée
+        de baptême.
+      </p>
     </SectionHeader>
 
     <Reveal>
@@ -95,19 +100,6 @@ export const ExpeditionPlan = () => (
               </div>
             );
           })}
-        </div>
-        <div className="plan-note-grid">
-          <div className="plan-confirmation">
-            <div className="plan-note-icon">
-              <CheckCircle2 size={20} aria-hidden="true" />
-            </div>
-            <div>
-              <p>Confirmation</p>
-              <strong>
-                Merci de confirmer votre présence avant le {invitationConfig.confirmationDeadline}.
-              </strong>
-            </div>
-          </div>
         </div>
         <div className="plan-route" aria-hidden="true">
           <span />

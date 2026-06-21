@@ -1,4 +1,4 @@
-import { Droplet, Heart, Map, PawPrint, Sparkles, Users } from "lucide-react";
+import { Heart, Map, Sparkles } from "lucide-react";
 import { invitationConfig } from "../config/invitationConfig";
 import {
   PaperCard,
@@ -21,7 +21,7 @@ export const JournalSection = () => (
 
     <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr]">
       <Reveal>
-        <PaperCard className="relative min-h-full overflow-hidden p-7 sm:p-10">
+        <PaperCard className="relative flex min-h-full flex-col overflow-hidden p-7 sm:p-10">
           <div className="map-watermark" aria-hidden="true">
             <Map size={220} strokeWidth={0.8} />
           </div>
@@ -38,18 +38,11 @@ export const JournalSection = () => (
           <div className="divider-line">
             <Heart size={18} fill="currentColor" aria-hidden="true" />
           </div>
-          <div className="animal-strip" aria-hidden="true">
-            <span>lionceau</span>
-            <PawPrint size={18} />
-            <span>éléphant</span>
-            <PawPrint size={18} />
-            <span>girafe</span>
-          </div>
         </PaperCard>
       </Reveal>
 
       <Reveal delay={0.12}>
-        <PaperCard className="journal-step relative min-h-full p-7 sm:p-9" rotated="right">
+        <PaperCard className="journal-step relative flex min-h-full flex-col p-7 sm:p-10" rotated="right">
           <div className="tape tape-top" aria-hidden="true" />
           <Stamp className="mb-6">Une étape précieuse</Stamp>
           <h3 className="card-title">Une nouvelle étape</h3>
@@ -59,20 +52,6 @@ export const JournalSection = () => (
           </p>
           <div className="divider-line">
             <Sparkles size={18} aria-hidden="true" />
-          </div>
-          <div className="journal-badges">
-            <span className="journal-badge">
-              <Users size={15} aria-hidden="true" />
-              Famille
-            </span>
-            <span className="journal-badge">
-              <Heart size={15} fill="currentColor" aria-hidden="true" />
-              Amour
-            </span>
-            <span className="journal-badge">
-              <Droplet size={15} aria-hidden="true" />
-              Baptême
-            </span>
           </div>
         </PaperCard>
       </Reveal>

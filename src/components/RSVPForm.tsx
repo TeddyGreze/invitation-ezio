@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
-import { CheckCircle2, PartyPopper, Send } from "lucide-react";
+import { PartyPopper, Send } from "lucide-react";
 import { invitationConfig } from "../config/invitationConfig";
 import { PaperCard, Reveal, SectionDecor, SectionHeader, Stamp } from "./DecorativeElements";
 import { FloatingButterflies } from "./FloatingButterflies";
@@ -10,25 +10,26 @@ type RsvpFormData = {
   attendance: string;
   adults: string;
   children: string;
-  message: string;
-  diet: string;
 };
 
 type Status = "idle" | "sending" | "success" | "error";
 
+const ATTENDANCE_OPTIONS = ["Je serai présent(e)", "Je ne serai pas présent(e)"] as const;
+
 const initialForm: RsvpFormData = {
   name: "",
-  attendance: "Présent(e)",
+  attendance: ATTENDANCE_OPTIONS[0],
   adults: "2",
   children: "0",
-  message: "",
-  diet: "",
 };
 
 export const RSVPForm = () => {
   const { rsvp } = invitationConfig;
   const [form, setForm] = useState<RsvpFormData>(initialForm);
   const [status, setStatus] = useState<Status>("idle");
+  // Erreur de validation du champ « Nom et prénom » (obligatoire).
+  const [nameError, setNameError] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
   // Hauteur figée du corps de la carte pour éviter le saut de page au succès.
   const bodyRef = useRef<HTMLDivElement>(null);
   const [lockedHeight, setLockedHeight] = useState<number | undefined>(undefined);
@@ -52,6 +53,13 @@ export const RSVPForm = () => {
       return;
     }
 
+    // Validation : le nom et prénom est obligatoire (vide ou espaces seuls = invalide).
+    if (!form.name.trim()) {
+      setNameError(true);
+      nameRef.current?.focus();
+      return;
+    }
+
     // Fige la hauteur actuelle du formulaire avant de basculer sur le succès.
     setLockedHeight(bodyRef.current?.offsetHeight);
     setStatus("sending");
@@ -61,8 +69,6 @@ export const RSVPForm = () => {
       presence: form.attendance,
       adultes: form.adults,
       enfants: form.children,
-      message: form.message,
-      allergies: form.diet,
       dateEnvoi: new Date().toISOString(),
       userAgent: navigator.userAgent,
     };
@@ -110,20 +116,33 @@ export const RSVPForm = () => {
               <div className="rsvp-field rsvp-field--full">
                 <label htmlFor="rsvp-name">Nom et prénom</label>
                 <input
+                  ref={nameRef}
                   id="rsvp-name"
                   type="text"
                   required
                   autoComplete="name"
+                  className={nameError ? "is-invalid" : undefined}
+                  aria-invalid={nameError}
+                  aria-describedby={nameError ? "rsvp-name-error" : undefined}
                   value={form.name}
-                  onChange={update("name")}
+                  onChange={(event) => {
+                    update("name")(event);
+                    // L'erreur disparaît dès que l'utilisateur recommence à saisir.
+                    if (nameError) setNameError(false);
+                  }}
                   placeholder="Famille Explorateur"
                 />
+                {nameError ? (
+                  <span id="rsvp-name-error" className="rsvp-field-error" role="alert">
+                    Merci d'indiquer votre nom et prénom avant d'envoyer votre réponse.
+                  </span>
+                ) : null}
               </div>
 
               <div className="rsvp-field rsvp-field--full">
                 <span className="rsvp-legend">Présence</span>
                 <div className="rsvp-radio-group" role="radiogroup" aria-label="Présence">
-                  {["Présent(e)", "Absent(e)"].map((option) => (
+                  {ATTENDANCE_OPTIONS.map((option) => (
                     <label key={option} className={`rsvp-radio ${form.attendance === option ? "is-active" : ""}`}>
                       <input
                         type="radio"
@@ -162,28 +181,6 @@ export const RSVPForm = () => {
                 />
               </div>
 
-              <div className="rsvp-field rsvp-field--full">
-                <label htmlFor="rsvp-diet">Allergies ou repas spécial (optionnel)</label>
-                <input
-                  id="rsvp-diet"
-                  type="text"
-                  value={form.diet}
-                  onChange={update("diet")}
-                  placeholder="Végétarien, sans gluten…"
-                />
-              </div>
-
-              <div className="rsvp-field rsvp-field--full">
-                <label htmlFor="rsvp-message">Message (optionnel)</label>
-                <textarea
-                  id="rsvp-message"
-                  rows={3}
-                  value={form.message}
-                  onChange={update("message")}
-                  placeholder="Un petit mot pour les parents…"
-                />
-              </div>
-
               {status === "error" ? (
                 <p className="rsvp-feedback rsvp-feedback--error rsvp-field--full" role="alert">
                   Une erreur est survenue. Merci de réessayer dans quelques instants.
@@ -195,12 +192,6 @@ export const RSVPForm = () => {
                   <Send size={18} aria-hidden="true" />
                   {status === "sending" ? "Envoi en cours…" : "Envoyer ma réponse"}
                 </button>
-                <span className="rsvp-hint">
-                  <CheckCircle2 size={14} aria-hidden="true" />
-                  {configured
-                    ? "Votre réponse est envoyée directement aux parents."
-                    : "Service de confirmation non configuré."}
-                </span>
               </div>
             </form>
           )}

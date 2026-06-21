@@ -25,6 +25,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* iOS Safari gonfle automatiquement certaines polices sur appareil réel
+     (text inflation) — on le désactive pour un rendu identique à desktop/Android. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -229,11 +233,20 @@ textarea:focus-visible {
 }
 
 .hero-subtitle {
-  margin-top: 0.8rem;
+  /* Plus d'air sous le prénom cursif « Ezio » (sa ligne de base est haute). */
+  margin-top: 1.5rem;
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(1.45rem, 3.6vw, 2.75rem);
   font-weight: 700;
   color: var(--color-ink);
+  /* Répartit les lignes de façon équilibrée (évite les orphelins type « 2026 »
+     seul en bas) sur les navigateurs récents, dont iOS Safari ≥ 17.4. */
+  text-wrap: balance;
+}
+
+/* La date reste insécable : jamais « 17 mai » / « 2026 » coupés. */
+.hero-date {
+  white-space: nowrap;
 }
 
 .hero-intro {
@@ -606,11 +619,18 @@ textarea:focus-visible {
 }
 
 .divider-line {
-  margin: 2.3rem 0;
+  /* margin-top: auto -> pousse le séparateur en bas de la carte (flex column),
+     pour aligner les traits des deux cartes au même niveau. */
+  margin: auto 0 0;
   display: flex;
   align-items: center;
   gap: 1rem;
   color: var(--color-clay);
+}
+
+/* Espace minimum entre le texte et le séparateur collé en bas. */
+.divider-line:not(:first-child) {
+  padding-top: 2.3rem;
 }
 
 .divider-line::before,
@@ -1087,6 +1107,25 @@ textarea:focus-visible {
   outline: none;
   border-color: rgba(79, 109, 74, 0.55);
   box-shadow: 0 0 0 3px rgba(79, 109, 74, 0.16);
+}
+
+/* Champ en erreur (ex. nom et prénom manquant) : bordure clay plus visible. */
+.rsvp-field input.is-invalid {
+  border-color: rgba(182, 109, 77, 0.7);
+}
+
+.rsvp-field input.is-invalid:focus {
+  border-color: rgba(182, 109, 77, 0.8);
+  box-shadow: 0 0 0 3px rgba(182, 109, 77, 0.18);
+}
+
+/* Message d'erreur discret sous le champ. */
+.rsvp-field-error {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-clay);
 }
 
 .rsvp-radio-group {
@@ -2200,7 +2239,11 @@ textarea:focus-visible {
   }
 
   .hero-copy {
-    max-width: 22rem;
+    /* Exploite toute la largeur disponible (cap à 26rem pour les très grands
+       écrans). Sur iPhone large (440px) le bloc occupe enfin tout l'espace au
+       lieu de rester figé à 22rem → composition mieux cadrée, moins de coupures. */
+    width: 100%;
+    max-width: min(26rem, 100%);
     padding-top: 1.2rem;
   }
 
@@ -2229,13 +2272,15 @@ textarea:focus-visible {
   }
 
   .hero-subtitle {
-    margin-top: 0.75rem;
-    font-size: clamp(1.28rem, 6vw, 1.7rem);
+    margin-top: 1.15rem;
+    /* Facteur vw réduit + plafond plus bas : la police ne s'emballe plus sur les
+       iPhone larges (ex. 17 Pro Max), donc « 17 mai 2026 » ne déborde plus. */
+    font-size: clamp(1.2rem, 5.1vw, 1.5rem);
   }
 
   .hero-intro {
     margin-top: 0.75rem;
-    max-width: 20rem;
+    max-width: 100%;
     font-size: 0.94rem;
     line-height: 1.6;
   }

@@ -19,7 +19,7 @@ export const NoteCard = () => (
           Merci d'être avec nous dans cette belle aventure.
           <br />
           Votre présence sera le plus beau trésor pour accompagner {invitationConfig.babyName} dans
-          cette nouvelle étape.
+          son premier sacrement.
         </p>
         <p className="mt-8 font-script text-5xl text-brown">{invitationConfig.parentsNames}</p>
       </PaperCard>

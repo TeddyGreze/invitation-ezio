@@ -78,7 +78,8 @@ export const HeroSection = ({ onToast }: HeroSectionProps) => {
             {invitationConfig.babyName}
           </h1>
           <p className="hero-subtitle">
-            Petit explorateur depuis le {invitationConfig.birthDate}
+            Petit explorateur depuis le{" "}
+            <span className="hero-date">{invitationConfig.birthDate}</span>
           </p>
           <p className="hero-intro">
             Après plusieurs mois d'attente et une nouvelle merveille venue agrandir notre famille,
