@@ -30,6 +30,8 @@ const ambientLeaves = [
 
 const sparks = Array.from({ length: 10 });
 
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
 export const EnvelopeIntro = ({ onReveal, onFinish }: EnvelopeIntroProps) => {
   const prefersReducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
@@ -52,44 +54,59 @@ export const EnvelopeIntro = ({ onReveal, onFinish }: EnvelopeIntroProps) => {
       return;
     }
 
-    // Phase 4 — rupture du sceau (léger ressort, puis détachement).
+    // Étape 1 — feedback tactile immédiat : la scène se comprime brièvement,
+    // comme une pression sur du papier épais, pour confirmer l'interaction.
+    await stage.start({
+      scale: [1, 0.984, 1],
+      transition: { duration: 0.32, ease: [0.34, 1.25, 0.64, 1], times: [0, 0.4, 1] },
+    });
+
+    // Étapes 2 & 3 — le sceau de cire gonfle, se rompt et se détache (déverrouillage).
     setPhase("seal");
     await seal.start({
-      scale: [1, 1.16, 0.6],
-      rotate: [0, -6, 18],
-      y: [0, -3, 32],
+      scale: [1, 1.18, 0.58],
+      rotate: [0, -7, 20],
+      y: [0, -4, 34],
       opacity: [1, 1, 0],
-      transition: { duration: 0.62, ease: [0.34, 1.3, 0.64, 1], times: [0, 0.42, 1] },
+      transition: { duration: 0.64, ease: [0.34, 1.3, 0.64, 1], times: [0, 0.4, 1] },
     });
 
-    // Phase 5 — ouverture physique du rabat en 3D (charnière haute, angle réaliste).
+    // Étape 3 — ouverture physique du rabat en 3D (charnière haute). On ouvre
+    // franchement (-166°) pour que le rabat se couche vers l'arrière : sans cela
+    // la perspective le raccourcit et il paraît à peine entrouvert.
     setPhase("flap");
-    await flap.start({
-      rotateX: -141,
-      transition: { duration: 0.95, ease: [0.5, 0.02, 0.2, 1] },
+    const flapAnim = flap.start({
+      rotateX: -166,
+      transition: { duration: 1.1, ease: [0.46, 0.03, 0.18, 1] },
     });
 
-    // Phases 6 & 7 — la carte glisse dehors avec une légère inertie.
+    // Désynchronisation douce : la carte commence à se soulever AVANT la fin de
+    // l'ouverture du rabat → mouvement organique, jamais mécanique.
+    await wait(600);
+
+    // Étapes 4 & 5 — la carte glisse hors de l'enveloppe avec une légère inertie.
     setPhase("reveal");
-    await card.start({
-      y: "-64%",
-      scale: 1.05,
-      transition: { type: "spring", stiffness: 64, damping: 15, mass: 1.05 },
+    const cardAnim = card.start({
+      y: "-70%",
+      scale: 1.06,
+      transition: { type: "spring", stiffness: 58, damping: 15, mass: 1.1 },
     });
 
-    // Phase 8 — le contenu se monte SOUS la scène encore opaque, puis la scène
+    await Promise.all([flapAnim, cardAnim]);
+
+    // Étape 6 — le contenu se monte SOUS la scène encore opaque, puis la scène
     // fond (zoom + flou) pour révéler le hero. Aucun flash de l'arrière-plan.
     setPhase("transition");
     onReveal();
     await Promise.all([
       stage.start({
-        scale: 1.18,
-        transition: { duration: 0.85, ease: [0.5, 0, 0.2, 1] },
+        scale: 1.16,
+        transition: { duration: 0.9, ease: [0.5, 0, 0.2, 1] },
       }),
       root.start({
         opacity: 0,
         filter: "blur(10px)",
-        transition: { duration: 0.7, ease: [0.5, 0, 0.2, 1], delay: 0.2 },
+        transition: { duration: 0.72, ease: [0.5, 0, 0.2, 1], delay: 0.24 },
       }),
     ]);
 
@@ -142,6 +159,9 @@ export const EnvelopeIntro = ({ onReveal, onFinish }: EnvelopeIntroProps) => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
+          {/* Halo lumineux doux : donne à l'enveloppe une présence d'objet précieux */}
+          <span className="env-glow" aria-hidden="true" />
+
           <motion.button
             type="button"
             className={`env phase-${phase}`}
