@@ -11,6 +11,8 @@ import { PaperCard, SectionDecor, Stamp, Toast } from "./components/DecorativeEl
 import { FloatingButterflies } from "./components/FloatingButterflies";
 import { Particles } from "./components/Particles";
 import { ShareButtons } from "./components/ShareButtons";
+import { MusicToggle } from "./components/MusicToggle";
+import { useBackgroundMusic } from "./hooks/useBackgroundMusic";
 import { invitationConfig } from "./config/invitationConfig";
 
 export default function App() {
@@ -18,6 +20,7 @@ export default function App() {
   const [revealed, setRevealed] = useState(false);
   const [introMounted, setIntroMounted] = useState(true);
   const [toast, setToast] = useState("");
+  const music = useBackgroundMusic();
 
   const showToast = useCallback((message: string) => {
     setToast(message);
@@ -50,6 +53,7 @@ export default function App() {
       {introMounted ? (
         <EnvelopeIntro
           key="envelope"
+          onInteract={music.start}
           onReveal={() => {
             window.scrollTo(0, 0);
             setRevealed(true);
@@ -86,6 +90,8 @@ export default function App() {
           </section>
         </>
       ) : null}
+
+      {revealed ? <MusicToggle isPlaying={music.isPlaying} onToggle={music.toggle} /> : null}
 
       <Toast message={toast} open={Boolean(toast)} />
     </Layout>

@@ -82,9 +82,9 @@ export const HeroSection = ({ onToast }: HeroSectionProps) => {
             <span className="hero-date">{invitationConfig.birthDate}</span>
           </p>
           <p className="hero-intro">
-            Après plusieurs mois d'attente et une nouvelle merveille venue agrandir notre famille,
-            notre petit aventurier {invitationConfig.babyName} s'apprête à vivre une nouvelle étape
-            extraordinaire.
+            Après de longs mois d'attente, notre petite merveille, {invitationConfig.babyName}, est
+            enfin parmi nous. Aujourd'hui, il s'apprête à vivre une nouvelle étape de sa belle
+            aventure.
           </p>
 
           <div className="hero-actions">

@@ -9,6 +9,8 @@ type EnvelopeIntroProps = {
   onReveal: () => void;
   /** Retire la scène une fois le fondu terminé. */
   onFinish: () => void;
+  /** Appelé DANS le geste d'ouverture (clic/tap) — démarre la musique côté iOS. */
+  onInteract?: () => void;
 };
 
 /**
@@ -32,7 +34,7 @@ const sparks = Array.from({ length: 10 });
 
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-export const EnvelopeIntro = ({ onReveal, onFinish }: EnvelopeIntroProps) => {
+export const EnvelopeIntro = ({ onReveal, onFinish, onInteract }: EnvelopeIntroProps) => {
   const prefersReducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
   const lock = useRef(false);
@@ -119,6 +121,13 @@ export const EnvelopeIntro = ({ onReveal, onFinish }: EnvelopeIntroProps) => {
       return;
     }
     lock.current = true;
+    // Démarre la musique DANS le geste utilisateur (obligatoire iOS/Safari).
+    // Encapsulé : un éventuel échec audio ne doit jamais bloquer l'ouverture.
+    try {
+      onInteract?.();
+    } catch {
+      /* l'invitation reste prioritaire */
+    }
     void runSequence();
   };
 
