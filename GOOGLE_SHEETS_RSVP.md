@@ -58,15 +58,26 @@ await fetch(invitationConfig.rsvp.endpoint, {
 ```ts
 const payload = {
   nomPrenom,   // obligatoire
-  presence,    // obligatoire : "Présent(e)" ou "Absent(e)"
+  presence,    // obligatoire : exactement "Présent" ou "Absent"
   adultes,     // optionnel
   enfants,     // optionnel
-  message,     // optionnel
-  allergies,   // optionnel
   dateEnvoi: new Date().toISOString(),
   userAgent: navigator.userAgent,
 };
 ```
+
+> La colonne **Présence** reçoit désormais exactement `Présent` ou `Absent`
+> (et plus la phrase complète). Le script `doPost` stocke la valeur telle quelle
+> via `appendRow`, donc **aucune modification du script n'est nécessaire**.
+> Si vous calculez un total de personnes dans le Sheet, faites-le pointer sur la
+> nouvelle valeur, par ex. dans une colonne « Total » :
+>
+> ```txt
+> =SI(C2="Présent"; D2+E2; 0)
+> ```
+>
+> (`C` = Présence, `D` = Adultes, `E` = Enfants → total = adultes + enfants si
+> `Présent`, sinon `0`.)
 
 ## Script Google Apps Script conseillé
 

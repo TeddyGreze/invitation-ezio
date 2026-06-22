@@ -3,6 +3,13 @@
 const buildGoogleMapsDirectionsUrl = (destination: string) =>
   `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=driving`;
 
+// Adresse AFFICHÉE dans la section Rendez-vous (libellé humain + lien Maps GPS).
+const RECEPTION_ADDRESS = "5 chemin Coupan, 97424 Piton Saint-Leu";
+
+// Adresse EXACTE du lieu utilisée par TOUS les calendriers (Google, Outlook,
+// Apple, ICS, webcal). SOURCE UNIQUE — ne jamais dupliquer ailleurs dans le code.
+const CALENDAR_LOCATION = "5 Chem. Coupan, Saint-Leu 97424, La Réunion";
+
 export const invitationConfig = {
   babyName: "Ezio",
   birthDate: "17 mai 2026",
@@ -20,7 +27,7 @@ export const invitationConfig = {
   ),
   // Adresse de réception / célébration — affichage + itinéraire par coordonnées
   // GPS exactes (le texte seul renvoyait vers un mauvais lieu).
-  receptionAddress: "5 chemin Coupan, 97424 Piton Saint-Leu",
+  receptionAddress: RECEPTION_ADDRESS,
   receptionMapsUrl:
     "https://www.google.com/maps/dir/?api=1&destination=-21.2093269,55.297468&travelmode=driving",
   celebrationLocation: "Repas festif après la cérémonie",
@@ -83,7 +90,7 @@ export const invitationConfig = {
     date: "2026-07-12",
     startTime: "12:00",
     endTime: "16:00",
-    location: "32 rue des salines, La Saline les Bains",
+    location: CALENDAR_LOCATION,
     timeZone: "Indian/Reunion",
     description:
       "Invitation au baptême d'Ezio. Nous serons heureux de partager cette belle journée avec vous.",

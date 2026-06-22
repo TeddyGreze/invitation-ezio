@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
-import { PartyPopper, Send } from "lucide-react";
+import { Loader2, PartyPopper, Send } from "lucide-react";
 import { invitationConfig } from "../config/invitationConfig";
 import { PaperCard, Reveal, SectionDecor, SectionHeader, Stamp } from "./DecorativeElements";
 import { FloatingButterflies } from "./FloatingButterflies";
@@ -14,11 +14,16 @@ type RsvpFormData = {
 
 type Status = "idle" | "sending" | "success" | "error";
 
-const ATTENDANCE_OPTIONS = ["Je serai présent(e)", "Je ne serai pas présent(e)"] as const;
+// `label` = texte affiché sur le site ; `value` = valeur propre envoyée à
+// Google Sheets (colonne « Présence »).
+const ATTENDANCE_OPTIONS = [
+  { value: "Présent", label: "Je serai présent(e)" },
+  { value: "Absent", label: "Je ne serai pas présent(e)" },
+] as const;
 
 const initialForm: RsvpFormData = {
   name: "",
-  attendance: ATTENDANCE_OPTIONS[0],
+  attendance: ATTENDANCE_OPTIONS[0].value,
   adults: "2",
   children: "0",
 };
@@ -143,15 +148,18 @@ export const RSVPForm = () => {
                 <span className="rsvp-legend">Présence</span>
                 <div className="rsvp-radio-group" role="radiogroup" aria-label="Présence">
                   {ATTENDANCE_OPTIONS.map((option) => (
-                    <label key={option} className={`rsvp-radio ${form.attendance === option ? "is-active" : ""}`}>
+                    <label
+                      key={option.value}
+                      className={`rsvp-radio ${form.attendance === option.value ? "is-active" : ""}`}
+                    >
                       <input
                         type="radio"
                         name="attendance"
-                        value={option}
-                        checked={form.attendance === option}
+                        value={option.value}
+                        checked={form.attendance === option.value}
                         onChange={update("attendance")}
                       />
-                      {option}
+                      {option.label}
                     </label>
                   ))}
                 </div>
@@ -188,8 +196,17 @@ export const RSVPForm = () => {
               ) : null}
 
               <div className="rsvp-actions rsvp-field--full">
-                <button type="submit" className="btn btn-primary" disabled={status === "sending" || !configured}>
-                  <Send size={18} aria-hidden="true" />
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={status === "sending" || !configured}
+                  aria-busy={status === "sending"}
+                >
+                  {status === "sending" ? (
+                    <Loader2 size={18} aria-hidden="true" className="animate-spin" />
+                  ) : (
+                    <Send size={18} aria-hidden="true" />
+                  )}
                   {status === "sending" ? "Envoi en cours…" : "Envoyer ma réponse"}
                 </button>
               </div>

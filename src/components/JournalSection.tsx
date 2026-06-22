@@ -16,7 +16,7 @@ export const JournalSection = () => (
     <Particles count={30} seed={2} />
     <FloatingButterflies section="journal" />
     <SectionHeader eyebrow="Page de carnet" title="Journal de bord">
-      <p>Une invitation douce, pensée comme une page tournée dans le grand carnet familial.</p>
+      <p>Un moment précieux se prépare, entouré de ceux qui comptent pour {invitationConfig.babyName}.</p>
     </SectionHeader>
 
     <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr]">

@@ -34,7 +34,7 @@ export const TimelineProgram = () => (
     <Particles count={30} seed={4} />
     <FloatingButterflies section="program" />
     <SectionHeader eyebrow="Chemin d'exploration" title="Le programme">
-      <p>Chaque étape apparaît comme une trace laissée dans le carnet de cette belle journée.</p>
+      <p>Une journée pensée pour partager ensemble les moments importants du baptême d'{invitationConfig.babyName}.</p>
     </SectionHeader>
 
     <div className="program-layout">

@@ -80,10 +80,6 @@ export default function App() {
               <h2 id="final-title" className="section-title">
                 Au plaisir de partager cette belle expédition avec vous.
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-ink/75">
-                Le carnet reste ouvert pour accueillir vos mots, vos sourires et vos souvenirs autour
-                du baptême d'{invitationConfig.babyName}.
-              </p>
               <p className="creole-closing">{invitationConfig.creoleClosing}</p>
               <ShareButtons onToast={showToast} />
             </PaperCard>

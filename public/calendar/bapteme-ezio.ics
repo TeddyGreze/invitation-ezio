@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Invitation Bapteme Ezio//Calendrier//FR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:bapteme-ezio-2026-07-12@invitation-bapteme-ezio.fr
+DTSTAMP:20260101T000000Z
+DTSTART:20260712T080000Z
+DTEND:20260712T120000Z
+SUMMARY:Baptême d'Ezio
+LOCATION:5 Chem. Coupan\, Saint-Leu 97424\, La Réunion
+DESCRIPTION:Invitation au baptême d'Ezio. Nous serons heureux de partager cette belle journée avec vous.
+END:VEVENT
+END:VCALENDAR

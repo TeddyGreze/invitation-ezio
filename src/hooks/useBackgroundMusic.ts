@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * sur `audio.volume`. Aucune dépendance externe.
  */
 
-const SRC = "/audio/musique-invitation.mp3";
+const SRC = "/audio/musique-invitationV2.mp3";
 const TARGET_VOLUME = 0.24; // doux (plage demandée 0.18–0.30)
 const FADE_IN_SECONDS = 2.4;
 const FADE_OUT_SECONDS = 0.5;
